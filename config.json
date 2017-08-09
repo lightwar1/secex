@@ -1,0 +1,13 @@
+{
+  "host": "185.195.25.47",
+  "username": "wiright",
+  "password": "2580",
+  "port": 22,
+  "commands": [
+    {
+      "command": "ls",
+      "arguments": null,
+      "printResult": true
+    }
+  ]
+}
