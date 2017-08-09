@@ -12,22 +12,21 @@ using json = nlohmann::json;
 int main(int argc, char const *argv[]){
 
 	LOG log;
+	json config, temp;
+	ifstream configFile("config.json");
 
-	ifstream in("config.json");
-
-	if (in){
-		string jsonData = "";
-		log.print_log("from log", "INFO");
-
+	if (configFile){
 		stringstream ss;
-		ss << in.rdbuf();
+		ss << configFile.rdbuf();
 
-		log.print_log(ss.str(), "DEBUG");
+		config = json::parse(ss.str());
+
+		// cout << "DEBUG : " << config.size() << endl << temp << endl << temp["username"];
 	} else {
 		log.print_log("file not found", "ERROR");
 	}
 
-	in.close();
+	configFile.close();
 
 /*	json j = {
 		{"name", "Ruslan"},
@@ -36,7 +35,7 @@ int main(int argc, char const *argv[]){
 
 /*	json j;
 	j["name"] = "ruslan";
-	j["info"]["age"] = 21;*/
+	j["configFilefo"]["age"] = 21;*/
 
 	// cout << "size = " << j.size() << endl << j.dump() << endl ;
 
