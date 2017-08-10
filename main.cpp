@@ -1,3 +1,9 @@
+/**
+ * SeCEx
+ * Server Command Executator 
+ * g++ main.cpp -o main.out -std=c++11
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -9,35 +15,30 @@
 using namespace std;
 using json = nlohmann::json;
 
-int main(int argc, char const *argv[]){
+int main(int argc, char const *argv[]) {
 
 	LOG log;
-	json config, temp;
+	json config;
+	// json temp;
 	ifstream configFile("config.json");
 
-	if (configFile){
-		stringstream ss;
-		ss << configFile.rdbuf();
+	if (configFile) {
+		log.print_log("File open! Read config", "DEBUG");
 
-		config = json::parse(ss.str());
+		configFile >> config;
 
-		// cout << "DEBUG : " << config.size() << endl << temp << endl << temp["username"];
+		log.print_log("File parsed! Get all metadata", "DEBUG");
+
+		for (auto data : config["commands"]) {
+			cout << "data -- " << data << endl;
+		}
+
 	} else {
 		log.print_log("file not found", "ERROR");
 	}
 
 	configFile.close();
-
-/*	json j = {
-		{"name", "Ruslan"},
-		{"age", 21}
-	};*/
-
-/*	json j;
-	j["name"] = "ruslan";
-	j["configFilefo"]["age"] = 21;*/
-
-	// cout << "size = " << j.size() << endl << j.dump() << endl ;
+	config.clear();
 
 	return 0;
 }
