@@ -30,6 +30,9 @@ class LOG {
 	/**
 	 * Удалить \n
 	 *
+	 * TODO: посмотреть по оптимизации
+	 * TODO: перевести на сссылки
+	 *
 	 * @param string
 	 * @return string
 	 */
