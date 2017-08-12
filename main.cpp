@@ -9,7 +9,6 @@
 #include <string>
 
 #include "libraries/include.hpp"
-#include "log.hpp"
 
 using namespace std;
 using json = nlohmann::json;
@@ -18,6 +17,7 @@ int main(int argc, char *argv[]) {
 
 	LOG log;
 	cmdline::add('c', "config");
+	cmdline::add('l', "log");
 
 	json config;
 	ifstream configFile;
@@ -29,13 +29,13 @@ int main(int argc, char *argv[]) {
 
 		if (configFile) {
 
-#if LEVEL_DEBUG
+#if LEVEL_DEBUG == 1
 			log.print_log("File open! Read config", "DEBUG");
 #endif
 
 			configFile >> config;
 
-#if LEVEL_DEBUG
+#if LEVEL_DEBUG == 1
 			log.print_log("File parsed! Get all metadata", "DEBUG");
 #endif
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 		configFile.close();
 		config.clear();
 	} else {
-		log.print_log("Not found some arguments. Try -h or --help", "ERROR");
+		log.print_log("Not found some arguments. Try -h", "ERROR");
 	}
 
 	return 0;

@@ -11,7 +11,7 @@
 
 #include "consts.h"
 
-using namespace std;
+// using namespace std;
 
 class LOG {
 	CONSTS consts;
@@ -21,24 +21,23 @@ class LOG {
 	 *
 	 * @return string
 	 */
-	string getTime() {
+	std::string getTime() {
 		time_t seconds = time(NULL);
 		tm* timeinfo = localtime(&seconds);
 		return asctime(timeinfo);
 	}
 
 	/**
-	 * Удалить \n
+	 * Remove \n
 	 *
-	 * TODO: посмотреть по оптимизации
-	 * TODO: перевести на сссылки
+	 * TODO: перевести на сссылки | remake with using pointer
 	 *
 	 * @param string
 	 * @return string
 	 */
-	string trim(string str) {
-		string::size_type pos = str.find_first_not_of("\n");
-		string::size_type pos1 = str.find_last_not_of("\n");
+	std::string trim(std::string str) {
+		std::string::size_type pos = str.find_first_not_of("\n");
+		std::string::size_type pos1 = str.find_last_not_of("\n");
 		return str.substr(pos, pos1 - pos + 1);
 	}
 
@@ -49,9 +48,9 @@ public:
 	 * @param
 	 * @param
 	 */
-	void print_log(string str, string type) {
+	void print_log(std::string str, std::string type) {
 		printf("{%s} [%s] %s\n",
-			this->trim(this->getTime()).c_str(),
+			(this->trim(this->getTime().c_str())).c_str(),
 		    (consts.find(type) + type + ENDC).c_str(),
 		    this->trim(str).c_str()
 		);
