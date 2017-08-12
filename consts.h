@@ -20,7 +20,7 @@ class CONSTS {
 public:
 	std::map<std::string, std::string> map;
 
-	CONSTS(){
+	CONSTS() {
 		map = {
 			{"INFO", INFO},
 			{"DEBUG", DEBUG},
@@ -31,10 +31,12 @@ public:
 	}
 
 	/**
-	 * @param
-	 * @return
+	 * Поиск в константах
+	 * 
+	 * @param string какой тип
+	 * @return string соответствующий код
 	 */
-	std::string find(std::string type){
+	std::string find(std::string type) {
 		return (*this->map.find(type)).second;
-	} 
+	}
 };

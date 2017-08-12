@@ -1,44 +1,57 @@
+/**
+ * SeCEx
+ * Server Command Executator
+ * g++ main.cpp -o main.out -std=c++11
+ */
+
 #include <iostream>
 #include <fstream>
 #include <string>
 
-#include "json.hpp"
-#include "cmdline.h"
+#include "libraries/include.hpp"
 #include "log.hpp"
 
 using namespace std;
 using json = nlohmann::json;
 
-int main(int argc, char const *argv[]){
+int main(int argc, char *argv[]) {
 
 	LOG log;
+	cmdline::add('c', "config");
 
-	ifstream in("config.json");
+	json config;
+	ifstream configFile;
 
-	if (in){
-		string jsonData = "";
-		log.print_log("from log", "INFO");
+	if (argc > 1) {
+		cmdline::CMDLINE cmdArgs(argc, argv);
 
-		stringstream ss;
-		ss << in.rdbuf();
+		configFile.open(cmdArgs.getString("config"));
 
-		log.print_log(ss.str(), "DEBUG");
+		if (configFile) {
+
+#if LEVEL_DEBUG
+			log.print_log("File open! Read config", "DEBUG");
+#endif
+
+			configFile >> config;
+
+#if LEVEL_DEBUG
+			log.print_log("File parsed! Get all metadata", "DEBUG");
+#endif
+
+			for (auto data : config["commands"]) {
+				cout << "data -- " << data << endl;
+			}
+
+		} else {
+			log.print_log("file not found", "ERROR");
+		}
+
+		configFile.close();
+		config.clear();
 	} else {
-		log.print_log("file not found", "ERROR");
+		log.print_log("Not found some arguments. Try -h or --help", "ERROR");
 	}
-
-	in.close();
-
-/*	json j = {
-		{"name", "Ruslan"},
-		{"age", 21}
-	};*/
-
-/*	json j;
-	j["name"] = "ruslan";
-	j["info"]["age"] = 21;*/
-
-	// cout << "size = " << j.size() << endl << j.dump() << endl ;
 
 	return 0;
 }

@@ -1,6 +1,6 @@
 /**
  * LOG
- * 
+ *
  * v 1.0
  */
 
@@ -18,39 +18,42 @@ class LOG {
 
 	/**
 	 * Получить текущее время
-	 * 
+	 *
 	 * @return string
 	 */
-	string getTime(){
+	string getTime() {
 		time_t seconds = time(NULL);
 		tm* timeinfo = localtime(&seconds);
 		return asctime(timeinfo);
 	}
 
 	/**
-	 * Удалить \n 
-	 * 
+	 * Удалить \n
+	 *
+	 * TODO: посмотреть по оптимизации
+	 * TODO: перевести на сссылки
+	 *
 	 * @param string
 	 * @return string
 	 */
-	string trim(string str){
+	string trim(string str) {
 		string::size_type pos = str.find_first_not_of("\n");
-    	string::size_type pos1 = str.find_last_not_of("\n");
-    	return str.substr(pos,pos1-pos+1);
+		string::size_type pos1 = str.find_last_not_of("\n");
+		return str.substr(pos, pos1 - pos + 1);
 	}
 
 public:
 	/**
 	 * Печать лога по заданному типу
-	 * 
+	 *
 	 * @param
 	 * @param
 	 */
-	void print_log(string str, string type){
-		printf("{%s} [%s] %s\n", 
-			this->trim(this->getTime()).c_str(), 
-			(consts.find(type) + type + ENDC).c_str(), 
-			this->trim(str).c_str()
+	void print_log(string str, string type) {
+		printf("{%s} [%s] %s\n",
+			this->trim(this->getTime()).c_str(),
+		    (consts.find(type) + type + ENDC).c_str(),
+		    this->trim(str).c_str()
 		);
 	}
 };
