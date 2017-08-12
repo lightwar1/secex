@@ -20,13 +20,12 @@ int main(int argc, char *argv[]) {
 	cmdline::add('c', "config");
 
 	json config;
-	// json temp;
 	ifstream configFile;
 
 	if (argc > 1) {
 		cmdline::CMDLINE cmdArgs(argc, argv);
 
-		configFile.open(cmdArgs.get("config"));
+		configFile.open(cmdArgs.getString("config"));
 
 		if (configFile) {
 

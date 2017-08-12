@@ -19,8 +19,6 @@
 #include <vector>
 #include <map>
 
-using namespace std;
-
 namespace cmdline {
 
 // TODO: посмотреть работу с вектором и добавить реализацию defaultValue
@@ -112,7 +110,7 @@ class CMDLINE {
 
 public:
   CMDLINE() {
-    cout << "init cmdline\n";
+    // cout << "init cmdline\n";
   }
 
   CMDLINE(int argc, char *argv[]) {
@@ -125,12 +123,12 @@ public:
   }
 
   /**
-   * [get [string] value from cmdLine arguments by [char] key]
+   * [getString [string] value from cmdLine arguments by [char] key]
    * 
    * @param  key [key [char] for find]
    * @return     [value [string]]
    */
-  string get(char key) {
+  std::string getString(char key) {
     //if in list of user commands have key
     if (listCommands.find(key) != listCommands.end()) {
       return (*commands.find((*listCommands.find(key)).second)).second;
@@ -148,7 +146,7 @@ public:
    * @param  key [description]
    * @return     [description]
    */
-  string get(string key) {
+  std::string getString(std::string key) {
     //if in list of user commands have key
     if (commands.find(key) != commands.end()) {
       return (*commands.find(key)).second;
@@ -161,12 +159,12 @@ public:
   }
 
   /**
-   * [get [int] value from cmdLine arguments]
+   * [getInt [int] value from cmdLine arguments]
    * 
    * @param  key [key [char] for find]
    * @return     [value [int]]
    */
-  /*  int get(char key) {
+  /*  int getInt(char key) {
       if (listCommands.find(key) != listCommands.end()) {
         return (*listCommands.find(key)).second;
       } else {
