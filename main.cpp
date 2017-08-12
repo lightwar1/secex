@@ -8,8 +8,7 @@
 #include <fstream>
 #include <string>
 
-#include "json.hpp"
-#include "cmdline.hpp"
+#include "libraries/include.hpp"
 #include "log.hpp"
 
 using namespace std;
@@ -18,28 +17,28 @@ using json = nlohmann::json;
 int main(int argc, char *argv[]) {
 
 	LOG log;
-	//TODO: разобраться
-	// cmdline::parser argParser;
-	//TODO: переделать на класс
-	//CMDLINE cmdline(argc, **argv);
+	cmdline::add('c', "config");
 
 	json config;
 	// json temp;
 	ifstream configFile;
 
-	// TODO: разобраться
-	// argParser.add<string>("host", 'h', "hostname", true, 0);
-	// argParser.parse_check(argc, argv);
-
 	if (argc > 1) {
-		configFile.open(argv[1]);
+		cmdline::CMDLINE cmdArgs(argc, argv);
+
+		configFile.open(cmdArgs.get("config"));
 
 		if (configFile) {
+
+#if LEVEL_DEBUG
 			log.print_log("File open! Read config", "DEBUG");
+#endif
 
 			configFile >> config;
 
+#if LEVEL_DEBUG
 			log.print_log("File parsed! Get all metadata", "DEBUG");
+#endif
 
 			for (auto data : config["commands"]) {
 				cout << "data -- " << data << endl;
