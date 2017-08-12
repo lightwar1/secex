@@ -52,7 +52,7 @@ void add(char short_name,
               << "-" << short_name << " "
               << "[" << description << "]\n";*/
 
-  listCommands.insert(pair<char, string>(short_name, full_name));
+  listCommands.insert(std::pair<char, std::string>(short_name, full_name));
 }
 
 class CMDLINE {
@@ -93,7 +93,7 @@ class CMDLINE {
      * config | config.json
      * help | bla
      */
-    commands.insert(pair<std::string, std::string>((*listCommands.find(c)).second, argument));
+    commands.insert(std::pair<std::string, std::string>((*listCommands.find(c)).second, argument));
   }
 
   /**
