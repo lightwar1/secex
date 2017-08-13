@@ -40,15 +40,16 @@ int main(int argc, char *argv[]) {
 			log.print_log("File parsed! Get all metadata", "DEBUG");
 #endif
 
+			// TODO: разобраться
+			// client.init(config["host"].c_str(), config["username"].c_str()); //use const char
+			client.init("dizoft.ru", "wiright");
+
 			for (auto data : config["commands"]) {
 				cout << "data -- " << data << endl;
 			}
 
 			// TODO: причесать
 
-			const char *hostChC = "dizoft.ru";
-			const char *nameChC = "wiright";
-			client.init(hostChC, nameChC); //use const char
 			client.connect();
 			client.exec_command("ls");
 			client.exec_command("cat file");
