@@ -16,11 +16,12 @@ using json = nlohmann::json;
 int main(int argc, char *argv[]) {
 
 	LOG log;
-	cmdline::add('c', "config");
-	cmdline::add('l', "log");
-
 	json config;
 	ifstream configFile;
+	sshclient::SSH client;
+
+	cmdline::add('c', "config");
+	cmdline::add('l', "log");
 
 	if (argc > 1) {
 		cmdline::CMDLINE cmdArgs(argc, argv);
@@ -42,6 +43,15 @@ int main(int argc, char *argv[]) {
 			for (auto data : config["commands"]) {
 				cout << "data -- " << data << endl;
 			}
+
+			// TODO: причесать
+
+			const char *hostChC = "dizoft.ru";
+			const char *nameChC = "wiright";
+			client.init(hostChC, nameChC); //use const char
+			client.connect();
+			client.exec_command("ls");
+			client.exec_command("cat file");
 
 		} else {
 			log.print_log("file not found", "ERROR");
