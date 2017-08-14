@@ -25,6 +25,7 @@
 namespace sshclient {
 
 ssh_session session;
+LOG log;
 
 class SSH {
 private:
@@ -94,7 +95,7 @@ private:
 
 	/********* EXECUTE COMMAND **********/
 
-	int show_remote_processes(const char *command) {
+	int execCommand(const char *command) {
 		ssh_channel channel;
 		int rc;
 		char buffer[256];
@@ -200,18 +201,18 @@ public:
 	 */
 	void connect() {
 		std::cout << "Try connect...\n";
+
 		this->connection = ssh_connect(session);
 
 		if (this->connection == SSH_OK) {
-			std::cout << "CONNECT!!!!!!\n";
 
 			if (this->verify_knownhost() < 0) {
-				std::cerr << "PIZDEC\n";
 				ssh_disconnect(session);
 				ssh_free(session);
-			}
 
-			std::cout << "All OK\n";
+				// TODO: переделать на класс ConnectException | remake in ConnectException
+				throw "Cant connect!";
+			}
 
 			/***** AUTHORIZE *****/
 			// TODO: in function
@@ -220,14 +221,15 @@ public:
 			rc = ssh_userauth_password(session, NULL, password);
 
 			if (rc != SSH_AUTH_SUCCESS) {
-				std::cerr << "Error authenticating with password: " << ssh_get_error(session) << "\n";
 				ssh_disconnect(session);
 				ssh_free(session);
-				exit(-1);
+
+				// TODO: переделать на класс AuthException | remake in AuthException
+				throw "Cant authorize!";
 			}
 			/***** /AUTHORIZE *****/
 
-			std::cout << "CAN AUTHORIZE!!!\n";
+			log.print_log("AUTHORIZE OK!!", "DEBUG");
 
 		} else {
 			// TODO: переделать на класс ConnectException | remake in ConnectException
@@ -236,15 +238,14 @@ public:
 	}
 
 	void exec_command(const char *command) {
-		if (this->show_remote_processes(command) != SSH_OK) {
-			std::cerr << "Error executing request\n";
+		if (this->execCommand(command) != SSH_OK) {
 			ssh_get_error(session);
 			ssh_disconnect(session);
 			ssh_free(session);
 			// TODO: переделать на класс ExecCommandException | remake in ExecCommandException
 			throw "Cant exec command!";
 		} else {
-			std::cout << "\n\n====================\nRequest completed successfully!\n";
+			std::cout << "\n====================\nRequest completed successfully!\n";
 		}
 	}
 

@@ -43,16 +43,15 @@ int main(int argc, char *argv[]) {
 			// TODO: разобраться
 			// client.init(config["host"].c_str(), config["username"].c_str()); //use const char
 			client.init("dizoft.ru", "wiright");
+			client.connect();
 
 			for (auto data : config["commands"]) {
 				cout << "data -- " << data << endl;
 			}
 
 			// TODO: причесать
-
-			client.connect();
-			client.exec_command("ls");
-			client.exec_command("cat file");
+			client.exec_command("cd /tmp && ls");
+			// client.exec_command("ls");
 
 		} else {
 			log.print_log("file not found", "ERROR");
