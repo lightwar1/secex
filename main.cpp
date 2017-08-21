@@ -8,6 +8,7 @@
 #include <fstream>
 #include <string>
 
+#include "exceptions/include.hpp"
 #include "libraries/include.hpp"
 
 using namespace std;
@@ -22,6 +23,13 @@ int main(int argc, char *argv[]) {
 
 	cmdline::add('c', "config");
 	cmdline::add('l', "log");
+
+	//TODO: вырезать, это пример | remvoe it. For example
+	// try {
+	// 	throw BasicException("AMATORY");
+	// } catch (BasicException& e){
+	// 	cout << "It was my Exception -- " << e.what() << endl;
+	// }
 
 	if (argc > 1) {
 		cmdline::CMDLINE cmdArgs(argc, argv);
@@ -43,7 +51,15 @@ int main(int argc, char *argv[]) {
 			// TODO: разобраться
 			// client.init(config["host"].c_str(), config["username"].c_str()); //use const char
 			client.init("dizoft.ru", "wiright");
-			client.connect();
+			try {
+				client.connect();
+			} catch (AuthException& e) {
+				cout << "AUTH Exception!!!! -- " << e.what() << endl;
+
+				client.close();
+				configFile.close();
+				config.clear();
+			}
 
 			for (auto data : config["commands"]) {
 				cout << "data -- " << data << endl;

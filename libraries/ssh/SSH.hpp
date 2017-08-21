@@ -22,6 +22,7 @@
 
 #include "../log/log.hpp"
 
+
 namespace sshclient {
 
 ssh_session session;
@@ -91,30 +92,46 @@ private:
 		return 0;
 	}
 
+	ssh_channel createChannel() {
+		ssh_channel channel = ssh_channel_new(session);
+		int rc = 0;
 
-
-	/********* EXECUTE COMMAND **********/
-
-	int execCommand(const char *command) {
-		ssh_channel channel;
-		int rc;
-		char buffer[256];
-		int nbytes;
-		channel = ssh_channel_new(session);
 		if (channel == NULL) {
-			return SSH_ERROR;
+			// return SSH_ERROR;
+			// TODO: переделать на класс Exception | remake in Exception
+			throw "SSH_ERROR";
 		}
+
 		rc = ssh_channel_open_session(channel);
 		if (rc != SSH_OK) {
 			ssh_channel_free(channel);
-			return rc;
+			// return rc;
+
+			// TODO: переделать на класс Exception | remake in Exception
+			throw "SSH_ERROR";
 		}
+
+		return channel;
+	}
+
+	/********* EXECUTE COMMAND **********/
+
+	short int execCommand(const char *command) {
+		int rc;
+		char buffer[256];
+		int nbytes;
+		// ssh_channel channel = ssh_channel_new(session);
+		ssh_channel channel = this->createChannel();
+
 		rc = ssh_channel_request_exec(channel, command);
 		if (rc != SSH_OK) {
 			ssh_channel_close(channel);
 			ssh_channel_free(channel);
-			return rc;
+
+			// TODO: переделать на класс Exception | remake in Exception
+			throw "SSH_ERROR";
 		}
+
 		nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
 		while (nbytes > 0) {
 			if (write(1, buffer, nbytes) != (unsigned int) nbytes) {
@@ -217,15 +234,13 @@ public:
 			/***** AUTHORIZE *****/
 			// TODO: in function
 			int rc;
-			const char *password = "2580";
+			const char *password = "25801";
 			rc = ssh_userauth_password(session, NULL, password);
 
 			if (rc != SSH_AUTH_SUCCESS) {
 				ssh_disconnect(session);
 				ssh_free(session);
-
-				// TODO: переделать на класс AuthException | remake in AuthException
-				throw "Cant authorize!";
+				throw AuthException("Cant authorize");
 			}
 			/***** /AUTHORIZE *****/
 
@@ -237,6 +252,12 @@ public:
 		}
 	}
 
+	/**
+	 * TODO: нужно описание (сейчас лень) | need description
+	 * 
+	 * [exec_command description]
+	 * @param command [description]
+	 */
 	void exec_command(const char *command) {
 		if (this->execCommand(command) != SSH_OK) {
 			ssh_get_error(session);
@@ -249,6 +270,18 @@ public:
 		}
 	}
 
+	/**
+	 * TODO: нужно описание (сейчас лень) | need description
+	 * 
+	 * [close description]
+	 */
+	void close() {
+		this->freeSSH();
+	}
+
+	/**
+	 * TODO: нужно описание (сейчас лень) | need description
+	 */
 	~SSH() {
 		this->freeSSH();
 	}
