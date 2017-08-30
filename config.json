@@ -5,12 +5,7 @@
   "username": "wiright",
   "commands": [
     {
-      "command": "cd",
-      "arguments": "/var/www/html/dizoft.ru/dev.mediacat",
-      "printResult": false
-    },
-    {
-      "command": "ls",
+      "command": "ls /var/www/html",
       "arguments": null,
       "printResult": true
     }

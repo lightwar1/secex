@@ -54,11 +54,14 @@ int main(int argc, char *argv[]) {
 			try {
 				client.connect();
 			} catch (AuthException& e) {
-				cout << "AUTH Exception!!!! -- " << e.what() << endl;
+				log.print_log(e.what(), "ERROR");
 
-				client.close();
+				//TODO: разобраться, почему нельзя тут закрывать (наверное в SSH.hpp при вызове trow необходимо вызывать закрыватель
+				// client.close();
 				configFile.close();
 				config.clear();
+
+				return 1;
 			}
 
 			for (auto data : config["commands"]) {

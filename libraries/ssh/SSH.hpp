@@ -157,7 +157,7 @@ private:
 	/********* /EXECUTE COMMAND *********/
 
 	/**
-	 * [free Free from memory. Called by desstructor and any functions]
+	 * [free Free from memory. Called by desstructor]
 	 */
 	void freeSSH() {
 		ssh_disconnect(session);
@@ -217,6 +217,8 @@ public:
 	 * [connect description]
 	 */
 	void connect() {
+
+		//TODO: удалить в последствии
 		std::cout << "Try connect...\n";
 
 		this->connection = ssh_connect(session);
@@ -224,8 +226,8 @@ public:
 		if (this->connection == SSH_OK) {
 
 			if (this->verify_knownhost() < 0) {
-				ssh_disconnect(session);
-				ssh_free(session);
+				// ssh_disconnect(session);
+				// ssh_free(session);
 
 				// TODO: переделать на класс ConnectException | remake in ConnectException
 				throw "Cant connect!";
@@ -238,9 +240,7 @@ public:
 			rc = ssh_userauth_password(session, NULL, password);
 
 			if (rc != SSH_AUTH_SUCCESS) {
-				ssh_disconnect(session);
-				ssh_free(session);
-				throw AuthException("Cant authorize");
+				throw AuthException("Cant authorize. Password is incorrect");
 			}
 			/***** /AUTHORIZE *****/
 
@@ -260,9 +260,6 @@ public:
 	 */
 	void exec_command(const char *command) {
 		if (this->execCommand(command) != SSH_OK) {
-			ssh_get_error(session);
-			ssh_disconnect(session);
-			ssh_free(session);
 			// TODO: переделать на класс ExecCommandException | remake in ExecCommandException
 			throw "Cant exec command!";
 		} else {

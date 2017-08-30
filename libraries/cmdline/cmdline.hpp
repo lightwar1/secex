@@ -47,6 +47,7 @@ std::map<std::string, std::string> commands;
  */
 void add(char short_name,
          const char *full_name) {
+  //TODO: remove it
   //debug
   /*  std::cout << "try to add : \n\t"
               << "-" << short_name << " "
@@ -73,7 +74,7 @@ class CMDLINE {
      * -[c]=config.json
      */
     std::string command = (arg.substr(0, arg.find('='))).substr(1, arg.length());
-    // TODO: перевести на char | remake with using {ONLY} char
+
     char c = command[0];
 
     /**
@@ -121,6 +122,8 @@ public:
       }
     }
   }
+
+  //TODO: переписать, используя template! | ReWrite using template!
 
   /**
    * [getString [string] value from cmdLine arguments by [char] key]
