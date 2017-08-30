@@ -1,0 +1,5 @@
+sudo: required
+language: cpp
+compiler: g++
+before_install:
+  - apt install libssh-dev
