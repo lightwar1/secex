@@ -56,6 +56,13 @@ void add(char short_name,
   listCommands.insert(std::pair<char, std::string>(short_name, full_name));
 }
 
+//TODO: not realised yet
+void add(char short_name, 
+         const char *full_name, 
+         const char *description) {
+
+}
+
 class CMDLINE {
 
   /**
