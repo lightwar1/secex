@@ -1,0 +1,16 @@
+dist: trusty
+sudo: required
+language:
+  - cpp
+compiler:
+  - gcc
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++
+      - libssh-dev
+script:
+  # Run your build commands next
+  - g++ main.cpp -o main -lssh -std=c++11

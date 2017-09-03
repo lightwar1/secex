@@ -4,6 +4,11 @@
  * v 1.0
  */
 
+#ifndef DIZOFT_LOG_HPP
+#define DIZOFT_LOG_HPP
+
+#pragma once
+
 #include <string>
 #include <cstdio>
 #include <ctime>
@@ -55,4 +60,7 @@ public:
 		    this->trim(str).c_str()
 		);
 	}
-};
+
+}; // class LOG
+
+#endif /* DIZOFT_LOG_HPP */

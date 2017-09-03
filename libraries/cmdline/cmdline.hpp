@@ -1,14 +1,14 @@
 /**
- * CMDLINE interface
- * Created by DIZOFT
- *
- * Use this class with namespace for parsing
- * cmd arguments
- *
- * For help see README.md
- *
- * v 1.0
- */
+* CMDLINE interface
+* Created by DIZOFT
+*
+* Use this class with namespace for parsing
+* cmd arguments
+*
+* For help see README.md
+*
+* v 1.0
+*/
 
 #pragma once
 
@@ -39,6 +39,7 @@ std::map<char, std::string> listCommands;
  */
 std::map<std::string, std::string> commands;
 
+signed short int NOT_A_VALUE = -1;
 
 /**
  * [add Add simple command]
@@ -47,12 +48,20 @@ std::map<std::string, std::string> commands;
  */
 void add(char short_name,
          const char *full_name) {
+  //TODO: remove it
   //debug
   /*  std::cout << "try to add : \n\t"
               << "-" << short_name << " "
               << "[" << description << "]\n";*/
 
   listCommands.insert(std::pair<char, std::string>(short_name, full_name));
+}
+
+//TODO: not realised yet
+void add(char short_name,
+         const char *full_name,
+         const char *description) {
+
 }
 
 class CMDLINE {
@@ -62,7 +71,7 @@ class CMDLINE {
    * @param argv [argument from cmdLine]
    */
   void checkArg(char *argv) {
-    // convert to string, to use c++ libraries
+    // convert to string, for use c++ libraries
     std::string arg(argv, strlen(argv));
 
     /**
@@ -73,7 +82,7 @@ class CMDLINE {
      * -[c]=config.json
      */
     std::string command = (arg.substr(0, arg.find('='))).substr(1, arg.length());
-    // TODO: перевести на char | remake with using {ONLY} char
+
     char c = command[0];
 
     /**
@@ -119,19 +128,22 @@ public:
       for (int i = 1; i < argc; i++) {
         this->checkArg(argv[i]);
       }
+    } else {
+      errors.push_back("dont have arguments!");
     }
   }
 
   /**
    * [getString [string] value from cmdLine arguments by [char] key]
-   * 
+   *
    * @param  key [key [char] for find]
    * @return     [value [string]]
    */
   std::string getString(char key) {
     //if in list of user commands have key
     if (listCommands.find(key) != listCommands.end()) {
-      return (*commands.find((*listCommands.find(key)).second)).second;
+      // return (*commands.find((*listCommands.find(key)).second)).second;
+      return commands.find(listCommands.find(key)->second)->second;
     } else {
       // TODO: добавлять описание переменных
       // errors.push_back("cant find record with [char] key {" + key + "}");
@@ -142,14 +154,14 @@ public:
 
   /**
    * [get [string] value from cmdLine arguments by [string] key]
-   * 
-   * @param  key [description]
-   * @return     [description]
+   *
+   * @param  key [key [char] for find]
+   * @return     [value [string]]
    */
   std::string getString(std::string key) {
     //if in list of user commands have key
     if (commands.find(key) != commands.end()) {
-      return (*commands.find(key)).second;
+      return commands.find(key)->second;
     } else {
       // TODO: добавлять описание переменных
       // errors.push_back("cant find record with [char] key {" + key + "}");
@@ -159,17 +171,38 @@ public:
   }
 
   /**
-   * [getInt [int] value from cmdLine arguments]
-   * 
+   * [getString [signed short int] value from cmdLine arguments by [char] key]
+   *
    * @param  key [key [char] for find]
-   * @return     [value [int]]
+   * @return     [value [signed short int]]
    */
-  /*  int getInt(char key) {
-      if (listCommands.find(key) != listCommands.end()) {
-        return (*listCommands.find(key)).second;
-      } else {
-        return NULL;
-      }
-    }*/
-};
-}
+  signed short int getInt(char key) {
+    //if in list of user commands have key
+    if (listCommands.find(key) != listCommands.end()) {
+      return std::stoi(commands.find(listCommands.find(key)->second)->second);
+    } else {
+      // TODO: добавлять описание переменных
+      // errors.push_back("cant find record with [char] key {" + key + "}");
+      errors.push_back("cant find record with [char] key}");
+      return NOT_A_VALUE;
+    }
+  }
+
+  /**
+   * [get [int] value from cmdLine arguments by [string] key]
+   *
+   * @param  key [key [char] for find]
+   * @return     [value [signed short int]]
+   */
+  signed short int getInt(std::string key) {
+    if (commands.find(key) != commands.end()) {
+      return std::stoi(commands.find(key)->second);
+    } else {
+      // TODO: добавлять описание переменных
+      // errors.push_back("cant find record with [char] key {" + key + "}");
+      errors.push_back("cant find record with [string] key");
+      return NOT_A_VALUE;
+    }
+  }
+}; // class CMDLINE
+} // namespace cmdline
