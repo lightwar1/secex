@@ -1,12 +1,12 @@
 {
   "host": "185.195.25.47",
+  "username": "wiright",
   "password": "2580",
   "port": 22,
-  "username": "wiright",
   "commands": [
     {
-      "command": "ls /var/www/html",
-      "arguments": null,
+      "command": "ls",
+      "arguments": "/var/www/html",
       "printResult": true
     }
   ]

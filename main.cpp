@@ -14,6 +14,19 @@
 using namespace std;
 using json = nlohmann::json;
 
+#define LEVEL_DEBUG 0
+
+// TODO: move in helperLibrary (DHelper (class?))
+string& trim(string& s, char c) {
+	for (unsigned short int i = 0; i < s.size(); i++) {
+		if (s[i] == c) {
+			s.erase(i, 1);
+		}
+	}
+
+	return s;
+}
+
 int main(int argc, char *argv[]) {
 
 	LOG log;
@@ -22,14 +35,6 @@ int main(int argc, char *argv[]) {
 	sshclient::SSH client;
 
 	cmdline::add('c', "config");
-	cmdline::add('l', "log");
-
-	//TODO: вырезать, это пример | remvoe it. For example
-	// try {
-	// 	throw BasicException("AMATORY");
-	// } catch (BasicException& e){
-	// 	cout << "It was my Exception -- " << e.what() << endl;
-	// }
 
 	if (argc > 1) {
 		cmdline::CMDLINE cmdArgs(argc, argv);
@@ -48,16 +53,14 @@ int main(int argc, char *argv[]) {
 			log.print_log("File parsed! Get all metadata", "DEBUG");
 #endif
 
-			// TODO: разобраться
-			// client.init(config["host"].c_str(), config["username"].c_str()); //use const char
-			client.init("dizoft.ru", "wiright");
+			client.init(config["host"].get<string>(), config["username"].get<string>());
 			try {
+
 				client.connect();
+
 			} catch (AuthException& e) {
 				log.print_log(e.what(), "ERROR");
 
-				//TODO: разобраться, почему нельзя тут закрывать (наверное в SSH.hpp при вызове trow необходимо вызывать закрыватель
-				// client.close();
 				configFile.close();
 				config.clear();
 
@@ -65,11 +68,12 @@ int main(int argc, char *argv[]) {
 			}
 
 			for (auto data : config["commands"]) {
+				//TODO: need fix to get config from config
 				cout << "data -- " << data << endl;
 			}
 
-			// TODO: причесать
-			client.exec_command("cd /tmp && ls");
+			// TODO: причесать @bug
+			client.exec_command("ls");
 			// client.exec_command("ls");
 
 		} else {
@@ -78,8 +82,14 @@ int main(int argc, char *argv[]) {
 
 		configFile.close();
 		config.clear();
+
+		return 1;
 	} else {
-		log.print_log("Not found some arguments. Try -h", "ERROR");
+		//TODO: not realized yet @tommorow
+		// log.print_log("Not found some arguments. Try -h", "ERROR");
+		log.print_log("Not found some arguments.", "ERROR");
+
+		return 1;
 	}
 
 	return 0;
