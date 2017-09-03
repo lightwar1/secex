@@ -32,6 +32,8 @@ class SSH {
 private:
 
 	/**
+	 * TODO: почитать и оптимизировать | need optimize
+	 * 
 	 * [verify_knownhost description]
 	 * @return [description]
 	 */
@@ -120,7 +122,7 @@ private:
 		int rc;
 		char buffer[256];
 		int nbytes;
-		// ssh_channel channel = ssh_channel_new(session);
+
 		ssh_channel channel = this->createChannel();
 
 		rc = ssh_channel_request_exec(channel, command);
@@ -187,9 +189,9 @@ public:
 	 * @param username [description]
 	 * @param port     [description]
 	 */
-	void init(std::string *host, std::string *username, unsigned short int port = 22) {
-		ssh_options_set(session, SSH_OPTIONS_HOST, host->c_str());
-		ssh_options_set(session, SSH_OPTIONS_USER, username->c_str());
+	void init(std::string host, std::string username, unsigned short int port = 22) {
+		ssh_options_set(session, SSH_OPTIONS_HOST, host.c_str());
+		ssh_options_set(session, SSH_OPTIONS_USER, username.c_str());
 		ssh_options_set(session, SSH_OPTIONS_PORT, &port);
 	}
 
@@ -217,18 +219,14 @@ public:
 	 * [connect description]
 	 */
 	void connect() {
-
-		//TODO: удалить в последствии
-		std::cout << "Try connect...\n";
-
+#if LEVEL_DEBUG == 1
+		log.print_log("Try connect", "DEBUG");
+#endif
 		this->connection = ssh_connect(session);
 
 		if (this->connection == SSH_OK) {
 
 			if (this->verify_knownhost() < 0) {
-				// ssh_disconnect(session);
-				// ssh_free(session);
-
 				// TODO: переделать на класс ConnectException | remake in ConnectException
 				throw "Cant connect!";
 			}
@@ -236,16 +234,16 @@ public:
 			/***** AUTHORIZE *****/
 			// TODO: in function
 			int rc;
-			const char *password = "25801";
+			const char *password = "2580";
 			rc = ssh_userauth_password(session, NULL, password);
 
 			if (rc != SSH_AUTH_SUCCESS) {
 				throw AuthException("Cant authorize. Password is incorrect");
 			}
 			/***** /AUTHORIZE *****/
-
+#if LEVEL_DEBUG == 1
 			log.print_log("AUTHORIZE OK!!", "DEBUG");
-
+#endif
 		} else {
 			// TODO: переделать на класс ConnectException | remake in ConnectException
 			throw "Cant connect!";
@@ -253,8 +251,10 @@ public:
 	}
 
 	/**
-	 * TODO: нужно описание (сейчас лень) | need description
-	 * 
+	 * Execute some command
+	 * This func create channel and destroy after the command complete
+	 * execution on server
+	 *
 	 * [exec_command description]
 	 * @param command [description]
 	 */
@@ -269,7 +269,7 @@ public:
 
 	/**
 	 * TODO: нужно описание (сейчас лень) | need description
-	 * 
+	 *
 	 * [close description]
 	 */
 	void close() {
