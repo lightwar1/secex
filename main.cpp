@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	LOG log;
 	json config;
 	ifstream configFile;
-	sshclient::SSH client;
+	sshclient2::SSH client;
 
 	cmdline::add('c', "config");
 
@@ -53,43 +53,47 @@ int main(int argc, char *argv[]) {
 			log.print_log("File parsed! Get all metadata", "DEBUG");
 #endif
 
-			client.init(config["host"].get<string>(), config["username"].get<string>());
 			try {
 
-				client.connect();
+				client.connect(config["host"].get<string>(), config["port"].get<unsigned short int>());
 
-			} catch (AuthException& e) {
-				log.print_log(e.what(), "ERROR");
+				// } catch (AuthException& e) {
+				// 	log.print_log(e.what(), "ERROR");
 
-				configFile.close();
-				config.clear();
+				// 	configFile.close();
+				// 	config.clear();
 
+				// 	return 1;
+			} catch (...) {
+				cout << "pizdec!!!" << endl;
 				return 1;
 			}
 
 			for (auto data : config["commands"]) {
-				//TODO: need fix to get config from config
+				// TODO: need fix to get config from config
 				cout << "data -- " << data << endl;
 			}
 
 			// TODO: причесать @bug
-			client.exec_command("ls");
+			// client.exec_command("ls");
 			// client.exec_command("ls");
 
-		} else {
-			log.print_log("file not found", "ERROR");
+			// } else {
+			// log.print_log("file not found", "ERROR");
+			// }
+
+			// configFile.close();
+			// config.clear();
+
+			// return 1;
+			// } else {
+			//TODO: not realized yet @tommorow
+			// log.print_log("Not found some arguments. Try -h", "ERROR");
+			// log.print_log("Not found some arguments.", "ERROR");
+
+			// return 1;
+			// }
 		}
-
-		configFile.close();
-		config.clear();
-
-		return 1;
-	} else {
-		//TODO: not realized yet @tommorow
-		// log.print_log("Not found some arguments. Try -h", "ERROR");
-		log.print_log("Not found some arguments.", "ERROR");
-
-		return 1;
 	}
 
 	return 0;
