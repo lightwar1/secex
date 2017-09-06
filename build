@@ -1,1 +1,1 @@
-g++ main.cpp -o main -lssh -std=c++11
+g++ main.cpp -o main.out -lssh2 -std=c++11
