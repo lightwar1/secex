@@ -10,7 +10,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++
-      - libssh-dev
+      - libssh2-1-dev
 script:
   # Run your build commands next
-  - g++ main.cpp -o main -lssh -std=c++11
+  - g++ main.cpp -o main.out -lssh2 -std=c++11
