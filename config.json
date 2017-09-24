@@ -1,7 +1,7 @@
 {
-  "host": "185.195.25.47",
-  "username": "wiright",
-  "password": "2580",
+  "host": "<ip_address_host_machine>",
+  "username": "<your_username_on_host_machine>",
+  "password": "<your_password>",
   "port": 22,
   "commands": [
     {
