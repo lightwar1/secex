@@ -49,10 +49,6 @@ int main(int argc, char *argv[]) {
 
 			configFile >> config;
 
-#if LEVEL_DEBUG == 1
-			log.print_log("File parsed! Get all metadata", "DEBUG");
-#endif
-
 			client.init(config["host"].get<string>(), config["username"].get<string>());
 			try {
 
